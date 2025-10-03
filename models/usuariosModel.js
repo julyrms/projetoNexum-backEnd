@@ -1,0 +1,71 @@
+// usuarios
+// novo usuario - insert
+// atualizar usuario - update
+// apagar usuario - delete
+// buscar usuario por id - select c where
+
+// CREATE TABLE usuarios (
+//     id_usuario SERIAL PRIMARY KEY,
+//     nome VARCHAR(100) NOT NULL,
+//     celular VARCHAR(50) NOT NULL,
+//     senha VARCHAR(100) NOT NULL,
+//     email VARCHAR(100) NOT NULL,
+//     servico_postado_contagem INT DEFAULT 0
+// );
+
+const conexao = require("../conexao");
+const bcrypt = require("bcrypt");
+
+const criarUsuario = async (nome, email, senhaHash, celular) => {
+  const query =
+    "INSERT INTO usuarios (nome, email, senha, celular) VALUES ($1, $2, $3, $4) RETURNING id_usuario, nome, email";
+  const valores = [nome, email, senhaHash, celular];
+
+  const { rows } = await conexao.query(query, valores);
+  return rows[0];
+};
+
+const gerarSenhaHash = async (senha) => {
+  return bcrypt.hash(senha, 10);
+};
+
+const compararSenhas = async (senha, senhaHash) => {
+  return bcrypt.compare(senha, senhaHash);
+};
+
+const buscarUsuarioPorEmail = async (email) => {
+  const query =
+    "SELECT id_usuario, nome, email, senha FROM usuarios WHERE email = $1";
+  const { rows } = await conexao.query(query, [email]);
+  return rows[0];
+};
+
+const atualizarUsuario = async (id_usuario, dados) => {
+  const { nome, email, celular } = dados;
+  const query = `UPDATE usuarios SET nome = $1, email = $2, celular = $3 WHERE id_usuario = $4 RETURNING *`;
+  const valores = [nome, email, celular, id_usuario];
+  const { rows } = await conexao.query(query, valores);
+  return rows[0];
+};
+
+const apagarUsuario = async (id) => {
+  const query = "DELETE FROM usuarios WHERE id_usuario = $1";
+  await conexao.query(query, [id]);
+};
+
+const buscarUsuarioPorId = async (id) => {
+  const query =
+    "SELECT id_usuario, nome, email, celular, servico_postado_contagem FROM usuarios WHERE id_usuario = $1";
+  const { rows } = await conexao.query(query, [id]);
+  return rows[0];
+};
+
+module.exports = {
+  criarUsuario,
+  gerarSenhaHash,
+  compararSenhas,
+  atualizarUsuario,
+  apagarUsuario,
+  buscarUsuarioPorId,
+  buscarUsuarioPorEmail,
+};
