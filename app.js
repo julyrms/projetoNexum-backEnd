@@ -10,7 +10,6 @@ const categoriasRoutes = require("./routes/categoriasRoutes");
 const notificacoesRoutes = require("./routes/notificacoesRoutes");
 const app = express();
 
-// middlewares
 app.use(cors()); // habilita CORS para todas as origens
 app.use(express.json()); // permite receber JSON no body das requisições
 
@@ -26,7 +25,7 @@ app.get("/", (req, res) => {
 });
 
 // inicia o servidor
-const port = 3000;
+const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log(`Servidor executando em: http://localhost:${port}`);
 });

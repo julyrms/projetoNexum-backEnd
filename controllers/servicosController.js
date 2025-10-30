@@ -34,10 +34,37 @@ const procurarServicoPorIdCategoria = async (req, res) => {
   }
 };
 
+const procurarServicosPorUsuario = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const servicos = await servicosModel.procurarServicosPorUsuario(id);
+    res.json(servicos);
+  } catch (error) {
+    res.status(500).json({
+      erro: "Erro ao buscar serviços do usuário",
+      detalhe: error.message,
+    });
+  }
+};
+
+const procurarServicoPorId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const servico = await servicosModel.procurarServicoPorId(id);
+    if (!servico) {
+      return res.status(404).json({ erro: "Serviço não encontrado" });
+    }
+    res.json(servico);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ erro: "Erro ao buscar serviço", detalhe: error.message });
+  }
+};
+
 const postarServico = async (req, res) => {
   const { user_id, category_id, nome, descricao, valor, localizacao } =
     req.body;
-  const { id } = req.params;
   try {
     const servico = await servicosModel.postarServico(
       user_id,
@@ -45,8 +72,7 @@ const postarServico = async (req, res) => {
       nome,
       descricao,
       valor,
-      localizacao,
-      id
+      localizacao
     );
     res.status(201).json(servico);
   } catch (error) {
@@ -110,4 +136,6 @@ module.exports = {
   atualizarServico,
   apagarServico,
   pesquisarServicoCidade,
+  procurarServicosPorUsuario,
+  procurarServicoPorId,
 };

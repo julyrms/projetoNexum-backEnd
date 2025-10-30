@@ -1,4 +1,3 @@
-const { json } = require("express");
 const categoriasModel = require("../models/categoriasModel");
 
 const criarCategoria = async (req, res) => {

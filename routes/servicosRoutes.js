@@ -11,6 +11,11 @@ router.post("/postarServico", servicosController.postarServico);
 router.put("/atualizarServico/:id", servicosController.atualizarServico);
 router.delete("/apagarServico/:id", servicosController.apagarServico);
 router.get("/pesquisarPorCidade", servicosController.pesquisarServicoCidade);
+router.get(
+  "/usuarioServicos/:id",
+  servicosController.procurarServicosPorUsuario
+);
+router.get("/servicoPorId/:id", servicosController.procurarServicoPorId);
 
 module.exports = router;
 

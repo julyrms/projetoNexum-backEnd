@@ -8,9 +8,28 @@
 const conexao = require("../conexao");
 
 const procurarServicos = async () => {
-  const query = "SELECT * FROM servicos";
+  const query = `
+    SELECT 
+      s.id_servico,
+      s.nome,
+      s.descricao,
+      s.valor,
+      s.localizacao,
+      s.criacao,
+      s.atualizado,
+      s.user_id,
+      u.nome AS nome_usuario,
+      c.nome AS nome_categoria
+    FROM servicos s
+    JOIN usuarios u ON s.user_id = u.id_usuario
+    JOIN categorias c ON s.category_id = c.id_categoria
+    ORDER BY s.criacao DESC;
+  `;
   const { rows } = await conexao.query(query);
   return rows;
+  // const query = "SELECT * FROM servicos";
+  // const { rows } = await conexao.query(query);
+  // return rows;
 };
 
 const procurarServicoPorIdCategoria = async (category_id) => {
@@ -27,6 +46,43 @@ const procurarServicoPorIdCategoria = async (category_id) => {
   `;
   const { rows } = await conexao.query(query, [category_id]);
   return rows;
+};
+
+const procurarServicosPorUsuario = async (id) => {
+  const query = `
+    SELECT 
+      s.id_servico,
+      s.nome,
+      s.descricao,
+      s.valor,
+      s.localizacao,
+      s.category_id,
+      c.nome AS nome_categoria
+    FROM servicos s
+    JOIN categorias c ON s.category_id = c.id_categoria
+    WHERE s.user_id = $1
+    ORDER BY s.criacao DESC;
+  `;
+  const { rows } = await conexao.query(query, [id]);
+  return rows;
+};
+
+const procurarServicoPorId = async (id) => {
+  const query = `
+    SELECT 
+      s.id_servico,
+      s.nome,
+      s.descricao,
+      s.valor,
+      s.localizacao,
+      s.category_id,
+      c.nome AS nome_categoria
+    FROM servicos s
+    JOIN categorias c ON s.category_id = c.id_categoria
+    WHERE s.id_servico = $1
+  `;
+  const { rows } = await conexao.query(query, [id]);
+  return rows[0];
 };
 
 const postarServico = async (
@@ -86,4 +142,6 @@ module.exports = {
   atualizarServico,
   apagarServico,
   pesquisarServicoCidade,
+  procurarServicosPorUsuario,
+  procurarServicoPorId,
 };

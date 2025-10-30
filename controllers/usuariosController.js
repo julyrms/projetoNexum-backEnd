@@ -36,7 +36,11 @@ const loginUsuario = async (req, res) => {
     }
     res.json({
       mensagem: "Login realizado com sucesso",
-      usuario: { id: usuario.id, nome: usuario.nome, email: usuario, email },
+      usuario: {
+        id: usuario.id_usuario,
+        nome: usuario.nome,
+        email: usuario.email,
+      },
     });
   } catch (error) {
     res
