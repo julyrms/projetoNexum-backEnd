@@ -19,6 +19,7 @@ const procurarServicos = async () => {
       s.atualizado,
       s.user_id,
       u.nome AS nome_usuario,
+      u.celular AS telefone_usuario,
       c.nome AS nome_categoria
     FROM servicos s
     JOIN usuarios u ON s.user_id = u.id_usuario
