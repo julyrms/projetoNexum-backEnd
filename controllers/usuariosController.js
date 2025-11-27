@@ -1,14 +1,15 @@
 const usuariosModel = require("../models/usuariosModel");
 
 const criarUsuario = async (req, res) => {
-  const { nome, email, senha, celular } = req.body;
+  const { nome, email, senha, celular, habilidades } = req.body;
   try {
     const senhaHash = await usuariosModel.gerarSenhaHash(senha);
     const usuario = await usuariosModel.criarUsuario(
       nome,
       email,
       senhaHash,
-      celular
+      celular,
+      habilidades
     );
     res.status(201).json(usuario);
   } catch (error) {
@@ -51,14 +52,16 @@ const loginUsuario = async (req, res) => {
 
 const atualizarUsuario = async (req, res) => {
   const { id } = req.params;
-  const { nome, email, celular } = req.body;
+  const { nome, email, celular, habilidades } = req.body;
 
   try {
     const usuarioAtualizado = await usuariosModel.atualizarUsuario(id, {
-      nome,
-      email,
-      celular,
-    });
+  nome,
+  email,
+  celular,
+  habilidades,
+});
+
     res.json(usuarioAtualizado);
   } catch (error) {
     res
