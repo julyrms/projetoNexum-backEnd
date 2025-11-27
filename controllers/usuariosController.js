@@ -41,6 +41,7 @@ const loginUsuario = async (req, res) => {
         id: usuario.id_usuario,
         nome: usuario.nome,
         email: usuario.email,
+        habilidades: usuario.habilidades,
       },
     });
   } catch (error) {
@@ -56,11 +57,11 @@ const atualizarUsuario = async (req, res) => {
 
   try {
     const usuarioAtualizado = await usuariosModel.atualizarUsuario(id, {
-  nome,
-  email,
-  celular,
-  habilidades,
-});
+      nome,
+      email,
+      celular,
+      habilidades,
+    });
 
     res.json(usuarioAtualizado);
   } catch (error) {
